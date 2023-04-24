@@ -42,7 +42,7 @@ Notes: Because program designed and developed in May, 2022, so, have some piece 
 
 
 # How to use ?
- - Basically, Easy to use to create a deal. I designed a class [`TradeP2P`](https://github.com/docongminh/trading-p2p/blob/master/clients/p2p/TradeP2P.ts)
+ - Basically, To create a deal, i designed a class [`TradeP2P`](https://github.com/docongminh/trading-p2p/blob/master/clients/p2p/TradeP2P.ts) that supported all methods related to `create`, `exchange` and `cancel` a deal.
     - Create a trade instance example:
       ```ts
         const rpc =  anchor.web3.clusterApiUrl("devnet")

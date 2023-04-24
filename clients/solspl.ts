@@ -1,6 +1,6 @@
 import * as anchor from "@project-serum/anchor";
 
-import { TradeP2P } from "./p2p";
+import { delay, TradeP2P } from "./p2p";
 import {
   CancelParams,
   PartnerInfo,
@@ -40,6 +40,43 @@ async function createTradeSolSpl(
   return signature;
 }
 
+async function exchange(
+  connection: anchor.web3.Connection,
+  orderId: number,
+  tradeInstance: TradeP2P,
+  receiveMintAddress: anchor.web3.PublicKey,
+  tradeCreator: anchor.web3.PublicKey,
+  partner: anchor.web3.Keypair,
+  creatorReceiveTokenAccount: anchor.web3.PublicKey,
+  partnerSendTokenAccount: anchor.web3.PublicKey
+): Promise<string> {
+  const tradeInfo: TradeInfo = {
+    orderId: orderId,
+    creator: tradeCreator,
+    creatorSendAccount: tradeCreator,
+    creatorReceiveAccount: creatorReceiveTokenAccount,
+    tradeType: TradeType.SOLSPL,
+    receiveMint: receiveMintAddress,
+  };
+
+  const partnerInfo: PartnerInfo = {
+    partner: partner.publicKey,
+    partnerSendAccount: partnerSendTokenAccount,
+    partnerReceiveAccount: partner.publicKey,
+  };
+
+  const exchangerawtransaction = await tradeInstance.exchange(
+    tradeInfo,
+    partnerInfo
+  );
+
+  const transaction = anchor.web3.Transaction.from(
+    Buffer.from(exchangerawtransaction)
+  );
+  const signature = await connection.sendTransaction(transaction, [partner]);
+  return signature;
+}
+
 async function cancelTradeSolSpl(
   connection: anchor.web3.Connection,
   orderId: number,
@@ -73,6 +110,8 @@ async function cancelTradeSolSpl(
     tokenA,
     tradeCreator,
     creatorTokenATokenAccount,
+    peerUser,
+    peerUserTokenATokenAccount,
   } = await setup();
   const orderId = Math.floor(Math.random() * 10000);
   const tradeValue = 0.01 * anchor.web3.LAMPORTS_PER_SOL;
@@ -88,5 +127,20 @@ async function cancelTradeSolSpl(
     creatorTokenATokenAccount
   );
 
-  console.log("signature create trade: ", signature);
+  console.log("signature create trade SPL - SPL: ", signature);
+
+  await delay(20000);
+  /// Exchange
+
+  const exchangeSig = await exchange(
+    connection,
+    orderId,
+    tradeInstance,
+    tokenA,
+    tradeCreator.publicKey,
+    peerUser,
+    creatorTokenATokenAccount,
+    peerUserTokenATokenAccount
+  );
+  console.log("signature exchange trade SOL - SPL: ", exchangeSig);
 })();

@@ -56,8 +56,8 @@ export type TradeInfo = {
   creatorReceiveAccount: PublicKey;
   orderId: number;
   tradeType: TradeType;
-  valueTrade: string;
-  valueReceive: string;
+  valueTrade?: number;
+  valueReceive?: number;
   specifyPartner?: PublicKey;
   tradeMint?: PublicKey;
   receiveMint?: PublicKey;

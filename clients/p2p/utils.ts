@@ -6,6 +6,11 @@ import {
 } from "@solana/spl-token";
 import BN from "bn.js";
 
+export function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+
 export async function findPdaAccount(
   programId: anchor.web3.PublicKey,
   seed: string,

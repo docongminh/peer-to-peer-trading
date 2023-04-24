@@ -1,4 +1,4 @@
-import { TradeP2P } from "./p2p";
+import { delay, TradeP2P } from "./p2p";
 
 import * as anchor from "@project-serum/anchor";
 import {
@@ -40,6 +40,38 @@ async function createTradeSplSol(
   return signature;
 }
 
+async function exchange(
+  connection: anchor.web3.Connection,
+  orderId: number,
+  tradeInstance: TradeP2P,
+  tradeMintAddress: anchor.web3.PublicKey,
+  tradeCreator: anchor.web3.PublicKey,
+  partner: anchor.web3.Keypair,
+  creatorSendTokenAccount: anchor.web3.PublicKey,
+  partnerReceiveTokenAccount: anchor.web3.PublicKey
+): Promise<string> {
+  const tradeInfo: TradeInfo = {
+    orderId: orderId,
+    creator: tradeCreator,
+    creatorReceiveAccount: tradeCreator,
+    creatorSendAccount: creatorSendTokenAccount,
+    tradeType: TradeType.SPLSOL,
+    tradeMint: tradeMintAddress,
+  };
+
+  const partnerInfo: PartnerInfo = {
+    partner: partner.publicKey,
+    partnerSendAccount: partner.publicKey,
+    partnerReceiveAccount: partnerReceiveTokenAccount,
+  };
+
+  const rawTransaction = await tradeInstance.exchange(tradeInfo, partnerInfo);
+
+  const transaction = anchor.web3.Transaction.from(Buffer.from(rawTransaction));
+  const signature = await connection.sendTransaction(transaction, [partner]);
+  return signature;
+}
+
 async function cancelTradeSplSol(
   connection: anchor.web3.Connection,
   orderId: number,
@@ -73,6 +105,8 @@ async function cancelTradeSplSol(
     tokenA,
     tradeCreator,
     creatorTokenATokenAccount,
+    peerUser,
+    peerUserTokenATokenAccount,
   } = await setup();
   const orderId = Math.floor(Math.random() * 10000);
   const tradeValue = 10;
@@ -89,4 +123,19 @@ async function cancelTradeSplSol(
   );
 
   console.log("signature create trade SPL-SOL: ", signature);
+
+  await delay(20000);
+  /// Exchange
+
+  const exchangeSig = await exchange(
+    connection,
+    orderId,
+    tradeInstance,
+    tokenA,
+    tradeCreator.publicKey,
+    peerUser,
+    creatorTokenATokenAccount,
+    peerUserTokenATokenAccount
+  );
+  console.log("signature exchange trade SPL - SOL: ", exchangeSig);
 })();

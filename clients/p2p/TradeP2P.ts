@@ -271,9 +271,7 @@ export class TradeP2P {
       partnerSendAccount: partnerInfo.partnerSendAccount,
       partnerReceiveAccount: partnerInfo.partnerReceiveAccount,
       creatorReceiveAccount: tradeInfo.creatorReceiveAccount,
-      partner: partnerInfo.partner,
-      systemProgram: SystemProgram.programId,
-      tokenProgram: TOKEN_PROGRAM_ID,
+      partner: partnerInfo.partner
     };
 
     const transaction = await this._program.methods

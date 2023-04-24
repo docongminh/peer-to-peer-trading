@@ -1,0 +1,25 @@
+[features]
+seeds = false
+skip-lint = false
+
+[programs.localnet]
+trade_p2p = "nekoJk93gCwQ1JwnzmpkagXZWx4WGqSowjdkvkGL9S9"
+seal_nft = "nftMEGX6316hku1j4ifAX78in6Tgo6EUyALvMjjpwsF"
+
+[registry]
+url = "https://api.apr.dev"
+
+[provider]
+cluster = "localnet"
+wallet = "/Users/minhdo/.config/solana/id.json"
+
+[[test.genesis]]
+address = "nekoJk93gCwQ1JwnzmpkagXZWx4WGqSowjdkvkGL9S9"
+program = "target/deploy/trade_p2p.so"
+
+[[test.genesis]]
+address = "nftMEGX6316hku1j4ifAX78in6Tgo6EUyALvMjjpwsF"
+program = "target/deploy/seal_nft.so"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.test.ts"

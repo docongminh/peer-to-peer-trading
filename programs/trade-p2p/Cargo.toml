@@ -1,0 +1,23 @@
+[package]
+name = "trade-p2p"
+version = "0.1.0"
+authors = ["Cristian Do <cristiando0902@gmail.com>"]
+description = "Created with Anchor"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "trade_p2p"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+anchor-lang = "0.25.0"
+anchor-spl = "0.25.0"
+bytemuck = "1.11.0"
+

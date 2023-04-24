@@ -20,7 +20,7 @@ Notes: Because program designed and developed in May, 2022, so, have some piece 
 
 # Logic
   - In this program. Currently supporting 3 types of trade [here](https://github.com/docongminh/trading-p2p/blob/master/programs/trade-p2p/src/state.rs#L6-L32):
-    - **Token - Token**: User A has ***Token A*** and want to trade ***x amount*** with someone to receive ***y Token B amount***
+    - **Token - Token**: User A has ***Token A*** and want to trade ***x Token A amount*** with someone to receive ***y Token B amount***
     - **Token - SOL**: User A has ***Token A*** and want to trade ***x Token A amount*** with someone to receive  ***y SOL amount***
     - **SOL - Token**: User A has ***SOL*** and want to trade ***x SOL amount*** with someone to receive ***y Token B amount***
   - Diagram for each trade type

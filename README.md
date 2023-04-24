@@ -23,6 +23,22 @@ Notes: Because program designed and developed in May, 2022, so, have some piece 
     - **Token - Token**: User A has ***Token A*** and want to trade with someone to receive ***Token B***
     - **Token - SOL**: User A has ***Token A*** and want to trade with someone to receive ***SOL***
     - **SOL - Token**: User A has ***SOL*** and want to trade with someone to receive ***Token B***
+  - Diagram for each trade type
+  
+   ***Token - Token***
+     <p align="center">
+       <img width="258" height="182" src="https://github.com/docongminh/trading-p2p/blob/master/resources/splspl.png">
+     </p>
+     
+   ***Token - SOL***
+     <p align="center">
+       <img width="258" height="182" src="https://github.com/docongminh/trading-p2p/blob/master/resources/splsol.png">
+     </p>
+     
+   ***SOL - Token***
+     <p align="center">
+       <img width="258" height="182" src="https://github.com/docongminh/trading-p2p/blob/master/resources/solspl.png">
+     </p>
 
 
 # How to use ?

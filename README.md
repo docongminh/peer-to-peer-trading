@@ -9,6 +9,7 @@ Notes: Because program designed and developed in May, 2022, so, have some piece 
   - [Context](#context)
   - [Logic](#logic)
   - [How to use ?](#how-to-use-)
+  - [Run example](#clients-example-in-here-has-wallet-and-config-already-to-example-client))
   
 
 # Context

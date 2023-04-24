@@ -57,12 +57,12 @@ pub struct EscrowAccount {
 impl EscrowAccount {
   pub const LEN: usize = 8
     + 32 * 8 // PubKey
-    + 33 * 3
+    + 33 * 3 // Option pubkey
     + 8 * 4 // u64
     + 1 * 4; // u8
 }
 
-// define stage (current support: Deposit & Withdraw)
+// define stage of deal
 #[derive(Clone, Copy, PartialEq)]
 pub enum Stage {
   ReadyExchange,
@@ -71,6 +71,7 @@ pub enum Stage {
 }
 
 impl Stage {
+
   pub fn from(code: u8) -> Result<Stage> {
     match code {
       1 => Ok(Stage::ReadyExchange),
@@ -82,6 +83,7 @@ impl Stage {
       }
     }
   }
+
   pub fn to_code(&self) -> u8 {
     match self {
       Stage::ReadyExchange => 1,

@@ -46,9 +46,13 @@ pub struct Create<'info> {
 
 #[derive(AnchorSerialize, AnchorDeserialize, Eq, PartialEq, Clone, Copy, Debug)]
 pub struct CreateParams {
+    // each trade deal has specify order id to identity
     pub order_id: u64,
+    // in this case, user want to trade with specify partner
     pub specify_partner: Option<Pubkey>,
+    // value of token user want to trade
     pub trade_value: u64,
+    // value of token user expect to receive
     pub receive_value: u64,
     pub timestamp: u64,
     pub vault_bump: u8,
@@ -58,8 +62,10 @@ pub fn handler_create_trade<'info>(
     ctx: Context<'_, '_, '_, 'info, Create<'info>>,
     params: CreateParams
 ) -> Result<()> {
+    // both trade value and receive value must be larger than zero
     require_gt!(params.trade_value, 0, EscrowError::ZeroValue);
     require_gt!(params.receive_value, 0, EscrowError::ZeroValue);
+
     // extract account
     // its work if it account is TokenAccount
     let creator_accounts: (TokenAccountType, TokenAccountType) = (
@@ -80,7 +86,7 @@ pub fn handler_create_trade<'info>(
 
     // init by trade type
     let trade_type: TradeType = match creator_accounts {
-        // CASE 1: SPL <-> SPL
+        /////// CASE 1: SPL <-> SPL
         // `creator_send_account` & `creator_receive_account` are Associate-Token-Account corresponding with mint addresses
         (Ok(creator_send_account), Ok(creator_receive_account)) =>
             match mints_address {
@@ -122,14 +128,18 @@ pub fn handler_create_trade<'info>(
                         EscrowError::InsufficientFunds
                     );
 
-                    // create account & init associated token account
+                    // create account associated token account
                     ctx.accounts.create_token_account_vault(
                         mint_token_creator_trade.to_account_info(),
                         vault_bump,
                         params.order_id
                     )?;
+
+                    // transfer token to escrow account
                     ctx.accounts.transfer_token_to_vault(params.trade_value)?;
+
                     msg!("Created trading P2P between SPL <-> SPL. Now ready for trade");
+
                     //
                     ctx.accounts.escrow_state.creator_send_token_mint = Some(
                         mint_token_creator_trade.key()
@@ -147,6 +157,8 @@ pub fn handler_create_trade<'info>(
                     return Err(EscrowError::InvalidMint.into());
                 }
             }
+
+
         // CASE 2: SPL <-> SOL
         // Only `creator_send_account` provided. And Its corresponding with `mint_token_creator_trade`
         (Ok(creator_send_account), Err(_)) =>
@@ -171,11 +183,14 @@ pub fn handler_create_trade<'info>(
                         EscrowError::InsufficientFunds
                     );
 
+                    // create token account
                     ctx.accounts.create_token_account_vault(
                         mint_token_creator_trade.to_account_info(),
                         vault_bump,
                         params.order_id
                     )?;
+
+                    // transfer token to escrow vault token account
                     ctx.accounts.transfer_token_to_vault(params.trade_value)?;
                     msg!("Created trading P2P between SPL <-> SOL. Now ready for trade");
                     //
@@ -215,9 +230,12 @@ pub fn handler_create_trade<'info>(
                         params.trade_value,
                         EscrowError::InsufficientFunds
                     );
+
+                    // create escrow vault account to hold lamports
                     ctx.accounts.create_native_account_vault(vault_bump, params.order_id)?;
                     // transfer SOL -> Vault Escrow
                     ctx.accounts.transfer_native_vault(params.trade_value)?;
+
                     msg!("Created trading P2P between SOL <-> SPL. Now ready for trade");
                     //
                     ctx.accounts.escrow_state.creator_receive_token_mint = Some(
@@ -233,13 +251,12 @@ pub fn handler_create_trade<'info>(
                     return Err(EscrowError::InvalidMint.into());
                 }
             }
-
-        //  TODO NFT case
         (Err(_), Err(_)) => {
             return Err(EscrowError::InvalidTradeType.into());
         }
     };
-    // fill escrow account data
+
+    // fill escrow config account data
     ctx.accounts.escrow_state.specify_partner = params.specify_partner;
     ctx.accounts.escrow_state.creator = ctx.accounts.creator.key();
     ctx.accounts.escrow_state.trade_type = trade_type.to_code();
@@ -256,6 +273,7 @@ pub fn handler_create_trade<'info>(
     ctx.accounts.escrow_state.stage = Stage::ReadyExchange.to_code();
     Ok(())
 }
+
 
 impl<'info> Create<'info> {
     fn create_token_account_vault(

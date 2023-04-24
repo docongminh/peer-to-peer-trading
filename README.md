@@ -9,7 +9,6 @@ Notes: Because program designed and developed in May, 2022, so, have some piece 
   - [Context](#context)
   - [Logic](#logic)
   - [How to use ?](#how-to-use-)
-  - [Tech notes](#tech-notes)
   
 
 # Context
@@ -136,10 +135,55 @@ Notes: Because program designed and developed in May, 2022, so, have some piece 
      - P2P SPL - SPL: 
      
   - Cancel:
-     - P2P SPL - SPL:
+      Follow up [`CancelParams`](https://github.com/docongminh/trading-p2p/blob/master/clients/p2p/types.ts#L66-L71)
+    
+       ```ts
+          export type CancelParams = {
+             creator: PublicKey;
+             orderId: number;
+             creatorSendAccount: PublicKey;
+             tradeMint: PublicKey;
+             tradeType: TradeType;
+          }
+       ```
         
-     - P2P SPL - SOL: 
+     - SPL - SPL:
+        ```ts
+           const cancelParams: CancelParams = {
+             orderId: orderId,
+             creator: tradeCreator.publicKey,
+             creatorSendAccount: creatorSendTokenAccount,
+             tradeType: TradeType.SPLSPL,
+             tradeMint: tradeMintAddress,
+           };
+           const transactionBuffer = await tradeInstance.cancel(cancelParams);
+        ```
+     - SPL - SOL:
+        ```ts
+           const cancelParams: CancelParams = {
+              orderId: orderId,
+              creator: tradeCreator.publicKey,
+              creatorSendAccount: creatorSendTokenAccount,
+              tradeType: TradeType.SPLSOL,
+              tradeMint: tradeMintAddress,
+           };
+           const transactionBuffer = await tradeInstance.cancel(cancelParams);
+        ```
    
-     - P2P SPL - SPL: 
+     - SOL - SPL:
+        ```ts
+            const tradeOrder: TradeOrderRequest = {
+               creator: tradeCreator.publicKey,
+               orderId: orderId,
+               tradeValue: tradeValue,
+               receiveValue: receivevalue,
+               creatorSendAccount: tradeCreator.publicKey,
+               creatorReceiveAccount: creatorReceiveTokenAccount,
+               receiveMint: receiveMintAddress,
+               timestamp: Date.now().toString(),
+               tradeType: TradeType.SOLSPL,
+            };
 
-# Tech notes
+            const transactionBuffer = await tradeInstance.createTrade(tradeOrder);
+        ``` 
+    Notes: More info and clients example in [here](https://github.com/docongminh/trading-p2p/tree/master/clients)

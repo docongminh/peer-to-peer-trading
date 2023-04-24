@@ -13,7 +13,7 @@ Notes: Because program designed and developed in May, 2022, so, have some piece 
   
 
 # Context
-  - In some bussiness cases, out token has not ido, or listing in any DEX. Pool liquidity has not provide. So, user can not trade or swap token.
+  - In some bussiness cases, out token has not had ido, or listed in any DEX. Pool liquidity has not provide. So, user can not trade or swap token.
   In this case, trading p2p program support user can create a deal to trade token between specify partner or any user has demand trade with this token.
   - Example use case:
     As a discord user in any community want to trade token with another discord user.

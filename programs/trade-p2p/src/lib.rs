@@ -10,7 +10,7 @@ pub mod utils;
 use crate::processor::*;
 use anchor_lang::prelude::*;
 
-declare_id!("nekoJk93gCwQ1JwnzmpkagXZWx4WGqSowjdkvkGL9S9");
+declare_id!("EJV62xsWEZ5Kbzy7QNR8ogvDDQYqMkdN31UyCqkeaHDe");
 
 #[program]
 pub mod trade_p2p {

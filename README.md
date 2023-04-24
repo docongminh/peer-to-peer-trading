@@ -129,10 +129,68 @@ Notes: Because program designed and developed in May, 2022, so, have some piece 
      
   - Exchange:
      - P2P SPL - SPL:
+        ```ts
+           const tradeInfo: TradeInfo = {
+            orderId: orderId,
+            creator: tradeCreator,
+            creatorSendAccount: creatorSendTokenAccount,
+            creatorReceiveAccount: creatorReceiveTokenAccount,
+            tradeMint: tradeMintAddress,
+            receiveMint: receiveMintAddress,
+            tradeType: TradeType.SPLSPL,
+          };
+
+          const partnerInfo: PartnerInfo = {
+            partner: partner.publicKey,
+            partnerSendAccount: partnerSendTokenAccount,
+            partnerReceiveAccount: partnerReceiveTokenAccount,
+          };
+
+          const transactionBuffer = await tradeInstance.exchange(tradeInfo, partnerInfo);
+        ```
         
-     - P2P SPL - SOL: 
-   
-     - P2P SPL - SPL: 
+     - P2P SPL - SOL:
+        ```ts
+            const tradeInfo: TradeInfo = {
+             orderId: orderId,
+             creator: tradeCreator,
+             creatorReceiveAccount: tradeCreator,
+             creatorSendAccount: creatorSendTokenAccount,
+             tradeType: TradeType.SPLSOL,
+             tradeMint: tradeMintAddress,
+           };
+
+           const partnerInfo: PartnerInfo = {
+             partner: partner.publicKey,
+             partnerSendAccount: partner.publicKey,
+             partnerReceiveAccount: partnerReceiveTokenAccount,
+           };
+
+           const transactionBuffer = await tradeInstance.exchange(tradeInfo, partnerInfo);
+        
+        ```
+        
+     - P2P SPL - SPL:
+        ```ts
+          const tradeInfo: TradeInfo = {
+            orderId: orderId,
+            creator: tradeCreator,
+            creatorSendAccount: creatorSendTokenAccount,
+            creatorReceiveAccount: creatorReceiveTokenAccount,
+            tradeMint: tradeMintAddress,
+            receiveMint: receiveMintAddress,
+            tradeType: TradeType.SPLSPL,
+          };
+
+          const partnerInfo: PartnerInfo = {
+            partner: partner.publicKey,
+            partnerSendAccount: partnerSendTokenAccount,
+            partnerReceiveAccount: partnerReceiveTokenAccount,
+          };
+
+          const transactionBuffer = await tradeInstance.exchange(tradeInfo, partnerInfo);
+        
+        ```
      
   - Cancel:
       Follow up [`CancelParams`](https://github.com/docongminh/trading-p2p/blob/master/clients/p2p/types.ts#L66-L71)
@@ -186,4 +244,9 @@ Notes: Because program designed and developed in May, 2022, so, have some piece 
 
             const transactionBuffer = await tradeInstance.createTrade(tradeOrder);
         ``` 
-    Notes: More info and clients example in [here](https://github.com/docongminh/trading-p2p/tree/master/clients)
+   ## clients example in [here](https://github.com/docongminh/trading-p2p/tree/master/clients) has wallet and config already to example client
+   - run create and exchange SPL-SPL:
+     
+       ```bash
+          npx ts-node clients/splspl.ts
+       ```

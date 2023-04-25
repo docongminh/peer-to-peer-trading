@@ -119,11 +119,10 @@ pub fn handler_exchange(ctx: Context<Exchange>) -> Result<()> {
                     return Err(EscrowError::InvalidAccount.into());
                 }
             }
-            // transfer TOKEN: partner -> Creator
-            ctx.accounts.transfer_to_creator_token(receive_value)?;
-
             // transfer TOKEN: escrow vault -> partner
             ctx.accounts.transfer_to_partner_token(trade_value)?;
+            // transfer TOKEN: partner -> Creator
+            ctx.accounts.transfer_to_creator_token(receive_value)?;
             // close vault token account
             ctx.accounts.close_vault_token()?;
         }
@@ -158,10 +157,11 @@ pub fn handler_exchange(ctx: Context<Exchange>) -> Result<()> {
                 receive_value,
                 EscrowError::InsufficientFunds
             );
-            // transfer SOL: partner -> Creator
-            ctx.accounts.transfer_to_creator_native(receive_value)?;
+
             // transfer TOKEN: escrow vault -> partner
             ctx.accounts.transfer_to_partner_token(trade_value)?;
+            // transfer SOL: partner -> Creator
+            ctx.accounts.transfer_to_creator_native(receive_value)?;
             ctx.accounts.close_vault_token()?;
         }
         // Case SOL - SPL

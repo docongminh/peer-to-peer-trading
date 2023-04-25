@@ -245,7 +245,7 @@ Notes: Because program designed and developed in May, 2022, so, have some piece 
 
             const transactionBuffer = await tradeInstance.createTrade(tradeOrder);
         ``` 
-   ## clients example in [here](https://github.com/docongminh/trading-p2p/tree/master/clients) has wallet and config already to example client
+   ## clients example in [here](https://github.com/docongminh/trading-p2p/tree/master/clients) has wallet and config ready for test.
    - run create and exchange SPL-SPL:
      
        ```bash

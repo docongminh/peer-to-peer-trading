@@ -9,19 +9,20 @@ Notes: Because program designed and developed in May, 2022, so, have some piece 
   - [Context](#context)
   - [Logic](#logic)
   - [How to use ?](#how-to-use-)
+  - [Run example](#clients-example-in-here-has-wallet-and-config-already-to-example-client)
   
 
 # Context
-  - In some bussiness cases, out token has not ido, or listing in any DEX. Pool liquidity has not provide. So, user can not trade or swap token.
+  - In some bussiness cases, out token has not had ido, or listed in any DEX. Pool liquidity has not provide. So, user can not trade or swap token.
   In this case, trading p2p program support user can create a deal to trade token between specify partner or any user has demand trade with this token.
   - Example use case:
     As a discord user in any community want to trade token with another discord user.
 
 # Logic
   - In this program. Currently supporting 3 types of trade [here](https://github.com/docongminh/trading-p2p/blob/master/programs/trade-p2p/src/state.rs#L6-L32):
-    - **Token - Token**: User A has ***Token A*** and want to trade with someone to receive ***Token B***
-    - **Token - SOL**: User A has ***Token A*** and want to trade with someone to receive ***SOL***
-    - **SOL - Token**: User A has ***SOL*** and want to trade with someone to receive ***Token B***
+    - **Token - Token**: User A has ***Token A*** and want to trade ***x Token A amount*** with someone to receive ***y Token B amount***
+    - **Token - SOL**: User A has ***Token A*** and want to trade ***x Token A amount*** with someone to receive  ***y SOL amount***
+    - **SOL - Token**: User A has ***SOL*** and want to trade ***x SOL amount*** with someone to receive ***y Token B amount***
   - Diagram for each trade type
   
    ***Token - Token***
@@ -129,10 +130,68 @@ Notes: Because program designed and developed in May, 2022, so, have some piece 
      
   - Exchange:
      - P2P SPL - SPL:
+        ```ts
+           const tradeInfo: TradeInfo = {
+            orderId: orderId,
+            creator: tradeCreator,
+            creatorSendAccount: creatorSendTokenAccount,
+            creatorReceiveAccount: creatorReceiveTokenAccount,
+            tradeMint: tradeMintAddress,
+            receiveMint: receiveMintAddress,
+            tradeType: TradeType.SPLSPL,
+          };
+
+          const partnerInfo: PartnerInfo = {
+            partner: partner.publicKey,
+            partnerSendAccount: partnerSendTokenAccount,
+            partnerReceiveAccount: partnerReceiveTokenAccount,
+          };
+
+          const transactionBuffer = await tradeInstance.exchange(tradeInfo, partnerInfo);
+        ```
         
-     - P2P SPL - SOL: 
-   
-     - P2P SPL - SPL: 
+     - P2P SPL - SOL:
+        ```ts
+            const tradeInfo: TradeInfo = {
+             orderId: orderId,
+             creator: tradeCreator,
+             creatorReceiveAccount: tradeCreator,
+             creatorSendAccount: creatorSendTokenAccount,
+             tradeType: TradeType.SPLSOL,
+             tradeMint: tradeMintAddress,
+           };
+
+           const partnerInfo: PartnerInfo = {
+             partner: partner.publicKey,
+             partnerSendAccount: partner.publicKey,
+             partnerReceiveAccount: partnerReceiveTokenAccount,
+           };
+
+           const transactionBuffer = await tradeInstance.exchange(tradeInfo, partnerInfo);
+        
+        ```
+        
+     - P2P SPL - SPL:
+        ```ts
+          const tradeInfo: TradeInfo = {
+            orderId: orderId,
+            creator: tradeCreator,
+            creatorSendAccount: creatorSendTokenAccount,
+            creatorReceiveAccount: creatorReceiveTokenAccount,
+            tradeMint: tradeMintAddress,
+            receiveMint: receiveMintAddress,
+            tradeType: TradeType.SPLSPL,
+          };
+
+          const partnerInfo: PartnerInfo = {
+            partner: partner.publicKey,
+            partnerSendAccount: partnerSendTokenAccount,
+            partnerReceiveAccount: partnerReceiveTokenAccount,
+          };
+
+          const transactionBuffer = await tradeInstance.exchange(tradeInfo, partnerInfo);
+        
+        ```
      
   - Cancel:
       Follow up [`CancelParams`](https://github.com/docongminh/trading-p2p/blob/master/clients/p2p/types.ts#L66-L71)
@@ -186,4 +245,9 @@ Notes: Because program designed and developed in May, 2022, so, have some piece 
 
             const transactionBuffer = await tradeInstance.createTrade(tradeOrder);
         ``` 
-    Notes: More info and clients example in [here](https://github.com/docongminh/trading-p2p/tree/master/clients)
+   ## clients example in [here](https://github.com/docongminh/trading-p2p/tree/master/clients) has wallet and config ready for test.
+   - run create and exchange SPL-SPL:
+     
+       ```bash
+          npx ts-node clients/splspl.ts
+       ```
